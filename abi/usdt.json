@@ -1,0 +1,278 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "lotteryId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "minLaunchDate",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "ticketPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "LotteryCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "lotteryId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "winner",
+        "type": "address"
+      }
+    ],
+    "name": "LotteryLaunched",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "lotteryId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      }
+    ],
+    "name": "TicketPurchased",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_lotteryId",
+        "type": "uint256"
+      }
+    ],
+    "name": "buyTicket",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_lotteryId",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelLottery",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_minLaunchDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_ticketPriceInGwei",
+        "type": "uint256"
+      }
+    ],
+    "name": "createLottery",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getLotteries",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minLaunchDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address[]",
+            "name": "players",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address",
+            "name": "winner",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "isActive",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct LotteryContract.Lottery[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_lotteryId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getWinner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_lotteryId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "name": "isUserInLottery",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_lotteryId",
+        "type": "uint256"
+      }
+    ],
+    "name": "launchLottery",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "lotteries",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minLaunchDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ticketPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "winner",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "isActive",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "lotteryCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
