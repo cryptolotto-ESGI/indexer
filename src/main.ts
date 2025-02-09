@@ -61,7 +61,7 @@ async function insertLottery(log: Log, ctx: DataHandlerContext<Store, {}>) {
     const convertedPriceToEth = parseFloat(String(Number(ticketPrice) / 1e18));
 
 
-    const lottery = new Lottery(description, convertedPriceToEth);
+    const lottery = new Lottery(owner, description, convertedPriceToEth);
     await ctx.store.insert(lottery);
 }
 

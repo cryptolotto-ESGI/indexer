@@ -12,14 +12,18 @@ export class Lottery {
     @Column("decimal")
     ticketPrice: number;
 
+    @Column({type: 'varchar'})
+    owner: string;
+
     @Column({nullable: true, type: 'varchar'})
     winnerAddress: string;
 
     @Column({nullable: true})
     endDate: Date;
 
-    constructor(description: string, ticketPrice: number, endDate: Date = null, winnerAddress: string = '') {
+    constructor(owner : string, description: string, ticketPrice: number, endDate: Date = null, winnerAddress: string = '') {
         this.id = uuidv4();
+        this.owner = owner;
         this.description = description;
         this.ticketPrice = ticketPrice;
         this.endDate = endDate;
