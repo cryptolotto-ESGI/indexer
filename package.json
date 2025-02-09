@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon --watch src --ext ts --exec \"npx tsc && node lib/main.js\"",
-    "start": "node lib/main.js\","
+    "start": "node lib/main.js\",",
+    "docker": "docker compose up -d && npx squid-typeorm-migration generate && npx squid-typeorm-migration apply"
   },
   "author": "",
   "license": "ISC",

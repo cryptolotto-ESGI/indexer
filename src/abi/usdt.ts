@@ -3,20 +3,20 @@ import { event, fun, viewFun, indexed, ContractBase } from '@subsquid/evm-abi'
 import type { EventParams as EParams, FunctionArguments, FunctionReturn } from '@subsquid/evm-abi'
 
 export const events = {
-    LotteryCreated: event("0x58da588946e8e99318cd4696aa161f4fcdda530d97eaf2de679d7b90e0869e29", "LotteryCreated(uint256,address,uint256,uint256)", {"lotteryId": indexed(p.uint256), "owner": indexed(p.address), "minLaunchDate": p.uint256, "ticketPrice": p.uint256}),
-    LotteryLaunched: event("0x14218c04536f37e04c68bb127688e6568fa5e6166a55f0d23a1a813723d555b6", "LotteryLaunched(uint256,address)", {"lotteryId": indexed(p.uint256), "winner": indexed(p.address)}),
+    LotteryCreated: event("0x9cfcfa237608bb025928c0e3678b36d461d5937c66d7122dcf4c886d6ff336af", "LotteryCreated(uint256,address,uint256,uint256,string)", {"lotteryId": indexed(p.uint256), "owner": indexed(p.address), "minLaunchDate": p.uint256, "ticketPrice": p.uint256, "description": p.string}),
+    LotteryLaunched: event("0xd1361514e95834459a6421529064ca67ca0509e9bcd566d2191590ada89f4310", "LotteryLaunched(uint256,address,uint256)", {"lotteryId": indexed(p.uint256), "winner": indexed(p.address), "endDate": p.uint256}),
     TicketPurchased: event("0x785f2865353ae960010300f584fc6c577b757a853af69a99c769df3c8232d3de", "TicketPurchased(uint256,address)", {"lotteryId": indexed(p.uint256), "buyer": indexed(p.address)}),
 }
 
 export const functions = {
     buyTicket: fun("0x67dd74ca", "buyTicket(uint256)", {"_lotteryId": p.uint256}, ),
     cancelLottery: fun("0x4538f297", "cancelLottery(uint256)", {"_lotteryId": p.uint256}, ),
-    createLottery: fun("0xfe35804e", "createLottery(uint256,uint256)", {"_minLaunchDate": p.uint256, "_ticketPriceInGwei": p.uint256}, ),
-    getLotteries: viewFun("0xbcc82ec4", "getLotteries()", {}, p.array(p.struct({"id": p.uint256, "owner": p.address, "minLaunchDate": p.uint256, "ticketPrice": p.uint256, "players": p.array(p.address), "winner": p.address, "isActive": p.bool}))),
+    createLottery: fun("0x7f9047e6", "createLottery(uint256,uint256,string)", {"_minLaunchDate": p.uint256, "_ticketPriceInGwei": p.uint256, "_description": p.string}, ),
+    getLotteries: viewFun("0xbcc82ec4", "getLotteries()", {}, p.array(p.struct({"id": p.uint256, "owner": p.address, "minLaunchDate": p.uint256, "endDate": p.uint256, "ticketPrice": p.uint256, "description": p.string, "tickets": p.array(p.struct({"buyer": p.address, "purchaseDate": p.uint256})), "winner": p.address, "isActive": p.bool}))),
     getWinner: viewFun("0x4129b2c9", "getWinner(uint256)", {"_lotteryId": p.uint256}, p.address),
     isUserInLottery: viewFun("0x28ebdd9b", "isUserInLottery(uint256,address)", {"_lotteryId": p.uint256, "_user": p.address}, p.bool),
     launchLottery: fun("0x98459fe0", "launchLottery(uint256)", {"_lotteryId": p.uint256}, ),
-    lotteries: viewFun("0x1398e076", "lotteries(uint256)", {"_0": p.uint256}, {"id": p.uint256, "owner": p.address, "minLaunchDate": p.uint256, "ticketPrice": p.uint256, "winner": p.address, "isActive": p.bool}),
+    lotteries: viewFun("0x1398e076", "lotteries(uint256)", {"_0": p.uint256}, {"id": p.uint256, "owner": p.address, "minLaunchDate": p.uint256, "endDate": p.uint256, "ticketPrice": p.uint256, "description": p.string, "winner": p.address, "isActive": p.bool}),
     lotteryCount: viewFun("0xc6f6d9d9", "lotteryCount()", {}, p.uint256),
 }
 

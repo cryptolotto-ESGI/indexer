@@ -1,4 +1,4 @@
-import {DataHandlerContext, EvmBatchProcessor} from "@subsquid/evm-processor";
+import {DataHandlerContext, EvmBatchProcessor, Log} from "@subsquid/evm-processor";
 import * as usdtAbi from './abi/usdt'
 import {Store, TypeormDatabase} from "@subsquid/typeorm-store";
 import {config} from "dotenv";
@@ -16,9 +16,13 @@ const processor = new EvmBatchProcessor()
     .setFinalityConfirmation(75)
     .addLog({
         address: [process.env.SMART_CONTRACT_ADDRESS],
-        topic0: [usdtAbi.events.LotteryCreated.topic, usdtAbi.events.TicketPurchased.topic],
+        topic0: [
+            usdtAbi.events.LotteryCreated.topic,
+            usdtAbi.events.TicketPurchased.topic,
+            usdtAbi.events.LotteryLaunched.topic,
+        ],
     }).setBlockRange({
-        from:7660000,
+        from: 48112200
     })
 
 export const db = new TypeormDatabase();
@@ -30,21 +34,17 @@ processor.run(db, async ctx => {
             switch (log.topics[0]) {
                 case usdtAbi.events.LotteryCreated.topic:
                     console.log('LotteryCreated Event');
-                    let {minLaunchDate, ticketPrice, owner} = usdtAbi.events.LotteryCreated.decode(log);
-                    console.log(minLaunchDate);
-                    console.log(ticketPrice);
-                    console.log(owner);
+                    await insertLottery(log, ctx);
+                    break;
 
-                    // await insertLottery('', ticketPrice, minLaunchDate, ctx);
+                case  usdtAbi.events.LotteryLaunched.topic:
+                    console.log('LotteryLaunched Event');
+                    // todo
                     break;
 
                 case  usdtAbi.events.TicketPurchased.topic:
                     console.log('TicketPurchased Event');
-                    let {lotteryId, buyer} = usdtAbi.events.TicketPurchased.decode(log);
-                    console.log(lotteryId);
-                    console.log(buyer);
-
-                   // await insertTicketPurchased(lotteryId, buyer, BigInt(0), ctx);
+                    // await insertTicket(log, ctx);
                     break;
 
                 default:
@@ -54,14 +54,20 @@ processor.run(db, async ctx => {
     }
 });
 
+
 // insert info
-async function insertLottery(description: string, ticketPrice: bigint, minLaunchDate: bigint, ctx: DataHandlerContext<Store, {}>) {
-    const convertedTicketPrice = Number(ticketPrice); // todo convert
-    const lottery = new Lottery(description, convertedTicketPrice, convertTimestampToDate(minLaunchDate));
-    // await ctx.store.insert(lottery);
+async function insertLottery(log: Log, ctx: DataHandlerContext<Store, {}>) {
+    let {ticketPrice, owner, description} = usdtAbi.events.LotteryCreated.decode(log);
+    const convertedPriceToEth = parseFloat(String(Number(ticketPrice) / 1e18));
+
+
+    const lottery = new Lottery(description, convertedPriceToEth);
+    await ctx.store.insert(lottery);
 }
 
-async function insertTicketPurchased(lotteryId: bigint, buyer: string, purchasedAt: bigint, ctx: DataHandlerContext<Store, {}>) {
+
+async function insertTicket(log: Log, ctx: DataHandlerContext<Store, {}>) {
+    let {lotteryId, buyer} = usdtAbi.events.TicketPurchased.decode(log);
 
     const lottery = await ctx.store.findOneOrFail(Lottery, {
         where: {
@@ -69,12 +75,6 @@ async function insertTicketPurchased(lotteryId: bigint, buyer: string, purchased
         }
     });
 
-    const ticketPurchased = new Ticket(lottery, buyer, convertTimestampToDate(purchasedAt));
-    // await ctx.store.insert(ticketPurchased);
-}
-
-
-// function utils
-function convertTimestampToDate(timestamp: bigint) {
-    return new Date(Number(timestamp) * 1000);
+    const ticketPurchased = new Ticket(lottery, buyer);
+    await ctx.store.insert(ticketPurchased);
 }

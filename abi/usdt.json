@@ -25,6 +25,12 @@
         "internalType": "uint256",
         "name": "ticketPrice",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
       }
     ],
     "name": "LotteryCreated",
@@ -44,6 +50,12 @@
         "internalType": "address",
         "name": "winner",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "endDate",
+        "type": "uint256"
       }
     ],
     "name": "LotteryLaunched",
@@ -105,6 +117,11 @@
         "internalType": "uint256",
         "name": "_ticketPriceInGwei",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_description",
+        "type": "string"
       }
     ],
     "name": "createLottery",
@@ -135,13 +152,35 @@
           },
           {
             "internalType": "uint256",
+            "name": "endDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
             "name": "ticketPrice",
             "type": "uint256"
           },
           {
-            "internalType": "address[]",
-            "name": "players",
-            "type": "address[]"
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "buyer",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "purchaseDate",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct LotteryContract.Ticket[]",
+            "name": "tickets",
+            "type": "tuple[]"
           },
           {
             "internalType": "address",
@@ -245,8 +284,18 @@
       },
       {
         "internalType": "uint256",
+        "name": "endDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "ticketPrice",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
       },
       {
         "internalType": "address",

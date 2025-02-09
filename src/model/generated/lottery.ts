@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
+import {v4 as uuidv4} from 'uuid';
 
 @Entity({name: 'lottery'})
 export class Lottery {
@@ -9,16 +9,16 @@ export class Lottery {
     @Column()
     description: string;
 
-    @Column()
+    @Column("decimal")
     ticketPrice: number;
 
-    @Column({ nullable: true, type: 'varchar' })
+    @Column({nullable: true, type: 'varchar'})
     winnerAddress: string;
 
-    @Column()
+    @Column({nullable: true})
     endDate: Date;
 
-    constructor(description: string, ticketPrice: number, endDate: Date, winnerAddress: string = '') {
+    constructor(description: string, ticketPrice: number, endDate: Date = null, winnerAddress: string = '') {
         this.id = uuidv4();
         this.description = description;
         this.ticketPrice = ticketPrice;
