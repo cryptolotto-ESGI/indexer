@@ -21,10 +21,10 @@ export class Lottery {
     @Column({nullable: true, type: 'varchar'})
     winnerAddress: string;
 
-    @Column({nullable: true})
+    @Column()
     endDate: Date;
 
-    constructor(blockchainId: string, owner : string, description: string, ticketPrice: number, endDate: Date = null, winnerAddress: string = '') {
+    constructor(blockchainId: string, owner: string, description: string, ticketPrice: number, endDate: Date, winnerAddress: string = '') {
         this.id = uuidv4();
         this.blockchainId = blockchainId;
         this.owner = owner;

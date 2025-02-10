@@ -57,11 +57,14 @@ processor.run(db, async ctx => {
 
 // insert info
 async function insertLottery(log: Log, ctx: DataHandlerContext<Store, {}>) {
-    let {ticketPrice, owner, description, lotteryId} = usdtAbi.events.LotteryCreated.decode(log);
+    let {ticketPrice, owner, description, lotteryId, minLaunchDate} = usdtAbi.events.LotteryCreated.decode(log);
+
+    const convertedDate = new Date(Number(minLaunchDate));
     const convertedPriceToEth = parseFloat(String(Number(ticketPrice) / 1e18));
 
 
-    const lottery = new Lottery(lotteryId.toString(), owner, description, convertedPriceToEth);
+    // save in end
+    const lottery = new Lottery(lotteryId.toString(), owner, description, convertedPriceToEth, convertedDate);
     await ctx.store.insert(lottery);
 }
 
@@ -74,7 +77,6 @@ async function startLottery(log: Log, ctx: DataHandlerContext<Store, {}>) {
             }
         });
 
-        lottery.endDate = new Date(Number(endDate) * 1000);
         lottery.winnerAddress = winner;
         await ctx.store.save(lottery);
     } catch (e) {
