@@ -7,6 +7,9 @@ export class Lottery {
     id: string;
 
     @Column()
+    blockchainId: string;
+
+    @Column()
     description: string;
 
     @Column("decimal")
@@ -21,8 +24,9 @@ export class Lottery {
     @Column({nullable: true})
     endDate: Date;
 
-    constructor(owner : string, description: string, ticketPrice: number, endDate: Date = null, winnerAddress: string = '') {
+    constructor(blockchainId: string, owner : string, description: string, ticketPrice: number, endDate: Date = null, winnerAddress: string = '') {
         this.id = uuidv4();
+        this.blockchainId = blockchainId;
         this.owner = owner;
         this.description = description;
         this.ticketPrice = ticketPrice;

@@ -37,14 +37,14 @@ processor.run(db, async ctx => {
                     await insertLottery(log, ctx);
                     break;
 
-                case  usdtAbi.events.LotteryLaunched.topic:
+                case usdtAbi.events.LotteryLaunched.topic:
                     console.log('LotteryLaunched Event');
-                    // todo
+                    await startLottery(log, ctx);
                     break;
 
-                case  usdtAbi.events.TicketPurchased.topic:
+                case usdtAbi.events.TicketPurchased.topic:
                     console.log('TicketPurchased Event');
-                    // await insertTicket(log, ctx);
+                    await insertTicket(log, ctx);
                     break;
 
                 default:
@@ -57,24 +57,44 @@ processor.run(db, async ctx => {
 
 // insert info
 async function insertLottery(log: Log, ctx: DataHandlerContext<Store, {}>) {
-    let {ticketPrice, owner, description} = usdtAbi.events.LotteryCreated.decode(log);
+    let {ticketPrice, owner, description, lotteryId} = usdtAbi.events.LotteryCreated.decode(log);
     const convertedPriceToEth = parseFloat(String(Number(ticketPrice) / 1e18));
 
 
-    const lottery = new Lottery(owner, description, convertedPriceToEth);
+    const lottery = new Lottery(lotteryId.toString(), owner, description, convertedPriceToEth);
     await ctx.store.insert(lottery);
+}
+
+async function startLottery(log: Log, ctx: DataHandlerContext<Store, {}>) {
+    try {
+        let {lotteryId, endDate, winner} = usdtAbi.events.LotteryLaunched.decode(log);
+        const lottery = await ctx.store.findOneOrFail(Lottery, {
+            where: {
+                blockchainId: lotteryId?.toString(),
+            }
+        });
+
+        lottery.endDate = new Date(Number(endDate) * 1000);
+        lottery.winnerAddress = winner;
+        await ctx.store.save(lottery);
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 
 async function insertTicket(log: Log, ctx: DataHandlerContext<Store, {}>) {
-    let {lotteryId, buyer} = usdtAbi.events.TicketPurchased.decode(log);
+    try {
+        let {lotteryId, buyer} = usdtAbi.events.TicketPurchased.decode(log);
+        const lottery = await ctx.store.findOneOrFail(Lottery, {
+            where: {
+                blockchainId: lotteryId?.toString(),
+            }
+        });
 
-    const lottery = await ctx.store.findOneOrFail(Lottery, {
-        where: {
-            id: lotteryId.toString(),
-        }
-    });
-
-    const ticketPurchased = new Ticket(lottery, buyer);
-    await ctx.store.insert(ticketPurchased);
+        const ticketPurchased = new Ticket(lottery, buyer);
+        await ctx.store.insert(ticketPurchased);
+    } catch (e) {
+        console.error(e);
+    }
 }
