@@ -59,7 +59,7 @@ processor.run(db, async ctx => {
 async function insertLottery(log: Log, ctx: DataHandlerContext<Store, {}>) {
     let {ticketPrice, owner, description, lotteryId, minLaunchDate} = usdtAbi.events.LotteryCreated.decode(log);
 
-    const convertedDate = new Date(Number(minLaunchDate));
+    const convertedDate = new Date(Number(minLaunchDate) * 1000);
     const convertedPriceToEth = parseFloat(String(Number(ticketPrice) / 1e18));
 
 
